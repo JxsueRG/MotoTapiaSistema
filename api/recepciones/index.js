@@ -4,7 +4,7 @@ module.exports = async (req, res) => {
     if (!auth(req, res)) return;
     await init();
     if (req.method === "GET") {
-      const rows = await sql`select id,creado,nombre,marca,modelo,placas from recepciones order by id desc limit 300`;
+      const rows = await sql`select id,creado,nombre,marca,modelo,placas,data->>'estatus' as estatus from recepciones order by id desc limit 300`;
       return res.json(rows);
     }
     if (req.method === "POST") {

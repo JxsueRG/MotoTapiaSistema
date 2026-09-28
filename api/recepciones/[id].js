@@ -10,6 +10,13 @@ module.exports = async (req, res) => {
       if (!r.length) return res.status(404).json({ error: "No existe" });
       return res.json({ ...r[0].data, id: r[0].id, creado: r[0].creado });
     }
+    if (req.method === "PUT") {
+      const e = (req.body || {}).estatus;
+      if (!["Recibida", "En reparación", "Lista", "Entregada"].includes(e))
+        return res.status(400).json({ error: "Estatus inválido" });
+      await sql`update recepciones set data = jsonb_set(data,'{estatus}',to_jsonb(${e}::text)) where id=${id}`;
+      return res.json({ ok: true });
+    }
     if (req.method === "DELETE") {
       await sql`delete from recepciones where id=${id}`;
       return res.json({ ok: true });
