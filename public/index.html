@@ -8,7 +8,7 @@
 <link rel="icon" href="/icon-180.png"><title>Moto Tapia · Recepción de motos</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--blue:#c93f00;--yellow:#fb5501;--bg:#eef0f8;--card:#fff;--ink:#14172b;--mute:#5d627c;--line:#d5d9ec;--red:#d7263d;--green:#1f9d55;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{--d1:#f5a524;--d2:#e5484d;--d3:#7c5cff;--blue:#c93f00;--yellow:#fb5501;--bg:#eef0f8;--card:#fff;--ink:#14172b;--mute:#5d627c;--line:#d5d9ec;--red:#d7263d;--green:#1f9d55;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1220;--card:#1a1e33;--ink:#eef0fb;--mute:#9aa0c0;--line:#2e3457;--blue:#ff7a3d}}
 :root[data-theme="dark"]{--bg:#0f1220;--card:#1a1e33;--ink:#eef0fb;--mute:#9aa0c0;--line:#2e3457;--blue:#ff7a3d}
 *{box-sizing:border-box}
@@ -74,7 +74,40 @@ canvas#sig{width:100%;height:170px;background:#fff;border:2px dashed var(--blue)
 #welcome label{color:#fff;opacity:.85}
 #welcome input{background:#fff;color:#14172b;font-size:22px;letter-spacing:8px;text-align:center}
 #wErr{color:#ffb4bd;min-height:22px;margin:8px 0;font-weight:600}
-.hb{display:flex;gap:12px;align-items:center;margin-bottom:10px}.hb img{border-radius:10px}.hb p{margin:0}.w-img{display:block;border-radius:22px;margin:0 0 30px}.shead{display:flex;gap:12px;align-items:center;margin-bottom:6px}.shead img{border-radius:10px}.shead h2{margin:0}.hide{display:none!important}
+.hb{display:flex;gap:12px;align-items:center;margin-bottom:10px}.hb img{border-radius:10px}.hb p{margin:0}.w-img{display:block;border-radius:22px;margin:0 0 30px}.shead{display:flex;gap:12px;align-items:center;margin-bottom:6px}.shead img{border-radius:10px}.shead h2{margin:0}main{max-width:1180px}
+#vNew{display:grid;grid-template-columns:1fr;gap:0 14px;grid-auto-flow:dense}
+.wide{grid-column:1/-1}
+#vList,#vDet{max-width:920px;margin:0 auto}
+.lo{margin-left:auto;background:rgba(255,255,255,.14);color:#fff;border:0;border-radius:10px;padding:9px 15px;font:700 14px Barlow,sans-serif}
+.tools{margin-bottom:6px}
+.opts input.d1:checked+span{background:var(--d1);border-color:var(--d1);color:#14172b}
+.opts input.d2:checked+span{background:var(--d2);border-color:var(--d2);color:#fff}
+.opts input.d3:checked+span{background:var(--d3);border-color:var(--d3);color:#fff}
+.hint{color:var(--mute);font-size:14px;margin:6px 0 10px}
+.bikes{display:grid;grid-template-columns:1fr;gap:12px}
+.bikes figure{margin:0}.bikes figcaption{text-align:center;font-weight:700;color:var(--mute);margin-top:4px}
+svg.bike{width:100%;height:auto;display:block;background:var(--bg);border-radius:12px;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.part{fill:rgba(128,140,180,.16);stroke:var(--ink);stroke-width:2.2;stroke-linejoin:round;cursor:pointer;transition:fill .15s}
+.part.s1{fill:var(--d1)}.part.s2{fill:var(--d2)}.part.s3{fill:var(--d3)}
+.deco{fill:none;stroke:var(--mute);stroke-width:3;stroke-linecap:round;pointer-events:none}
+.dl{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.dc{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:999px;padding:5px 11px;font-size:13px;font-weight:600}
+.dc i{width:10px;height:10px;border-radius:50%}.k1{background:var(--d1)}.k2{background:var(--d2)}.k3{background:var(--d3)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.stat b{display:block;font:800 34px "Barlow Condensed",sans-serif;color:var(--blue)}.stat span{color:var(--mute);font-size:13px;font-weight:600}
+#q{width:100%;padding:13px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:500 16px Barlow,sans-serif;margin-bottom:12px}
+.chip{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:10px 16px;font:700 14px Barlow,sans-serif}
+.chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
+.stp{color:var(--mute);font-weight:600}
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+@media(min-width:800px){
+ #vNew{grid-template-columns:1fr 1fr;align-items:start}
+ body{font-size:17px}main{padding:22px 28px}header{padding:16px 28px 0}header h1{font-size:40px}
+ input[type=text],input[type=tel],input[type=email],input[type=number],input[type=datetime-local],input[type=date],textarea{padding:14px;font-size:17px}
+ .opts span{padding:12px 18px;font-size:15px}.btn{padding:15px 22px}canvas#sig{height:250px}.inv{padding:11px 0}
+ .bikes{grid-template-columns:1fr 1fr}h2{font-size:26px}.chip{padding:12px 20px;font-size:15px}}
+.hide{display:none!important}
 @media print{body{background:#fff;color:#000}header,nav,#toast,.noprint{display:none!important}main{padding:0}section.card{border:0;padding:0}.sheet{color:#000}}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -89,7 +122,7 @@ canvas#sig{width:100%;height:170px;background:#fff;border:2px dashed var(--blue)
   <div id="wErr" role="alert"></div><button class="btn y big" type="submit">Entrar</button></form>
 </div></div>
 <header>
-  <div class="hb"><img src="/logo.png" alt="Logo Moto Tapia" width="52" height="52"><div><h1>MOTO <span>TAPIA</span></h1><p>Recepción digital de motocicletas</p></div></div>
+  <div class="hb"><img src="/logo.png" alt="Logo Moto Tapia" width="52" height="52"><div><h1>MOTO <span>TAPIA</span></h1><p>Recepción digital de motocicletas</p></div><button id="logout" class="lo" type="button">Salir</button></div>
   <nav><button id="tNew" class="on">Nueva recepción</button><button id="tList">Historial</button></nav>
 </header>
 <main>
@@ -124,11 +157,24 @@ canvas#sig{width:100%;height:170px;background:#fff;border:2px dashed var(--blue)
     <label for="estOtros">Otros</label><input type="text" id="estOtros">
   </section>
 
+  <section class="card wide"><h2>Estado de carrocería · marca los daños</h2>
+    <div class="opts tools">
+      <label><input type="radio" class="d1" name="tool" value="1" checked><span>Rayón</span></label>
+      <label><input type="radio" class="d2" name="tool" value="2"><span>Golpe / abolladura</span></label>
+      <label><input type="radio" class="d3" name="tool" value="3"><span>Roto / faltante</span></label>
+      <button type="button" class="btn g" id="dmgClear">Limpiar todo</button>
+    </div>
+    <p class="hint">Elige el tipo de daño y toca la pieza en el dibujo. Vuelve a tocarla para quitar la marca.</p>
+    <div class="bikes"><figure><div id="bkL"></div><figcaption>Lado izquierdo</figcaption></figure><figure><div id="bkR"></div><figcaption>Lado derecho</figcaption></figure></div>
+    <div id="dmgList"></div>
+    <label for="dmgNota">Observaciones de carrocería</label><textarea id="dmgNota" placeholder="Ej. rayón profundo en tanque, espejo derecho flojo…"></textarea>
+  </section>
+
   <section class="card"><h2>Falla principal detectada</h2>
     <textarea id="falla" placeholder="Describe lo que el cliente reporta o lo que se detectó"></textarea>
   </section>
 
-  <section class="card"><h2>Fotos de la moto</h2>
+  <section class="card wide"><h2>Fotos de la moto</h2>
     <div class="row">
       <button class="btn" id="bCam" type="button">Tomar foto</button>
       <button class="btn g" id="bGal" type="button">Elegir de galería</button>
@@ -148,17 +194,17 @@ canvas#sig{width:100%;height:170px;background:#fff;border:2px dashed var(--blue)
     <label for="gExc">A excepción de</label><input type="text" id="gExc">
   </section>
 
-  <section class="card"><h2>Firma de aceptación del cliente</h2>
+  <section class="card wide"><h2>Firma de aceptación del cliente</h2>
     <canvas id="sig"></canvas>
     <div class="row" style="margin-top:8px"><button class="btn g" id="sigClear" type="button">Borrar firma</button></div>
     <p style="font-size:13px;color:var(--mute)">Con su firma, el cliente acepta el estado en que deja la moto y el presupuesto indicado.</p>
   </section>
 
-  <button class="btn y big" id="save" type="button">Guardar recepción</button>
+  <button class="btn y big wide" id="save" type="button">Guardar recepción</button>
 </div>
 
 <!-- HISTORIAL -->
-<div id="vList" class="hide"><div id="list"></div></div>
+<div id="vList" class="hide"><div class="stats" id="stats"></div><input type="search" id="q" placeholder="Buscar por nombre, placas, moto o número de orden"><div id="list"></div></div>
 
 <!-- DETALLE -->
 <div id="vDet" class="hide">
@@ -168,6 +214,7 @@ canvas#sig{width:100%;height:170px;background:#fff;border:2px dashed var(--blue)
     <a class="btn y" id="dWa" target="_blank" rel="noopener" style="text-decoration:none">Enviar por WhatsApp</a>
     <button class="btn r" id="dDel" type="button">Borrar</button>
   </div>
+  <div class="row noprint" id="stRow" style="margin-bottom:12px"></div>
   <section class="card sheet" id="sheet"></section>
 </div>
 </main>
@@ -232,6 +279,42 @@ cv.addEventListener("pointermove",e=>{if(!drawing)return;const[x,y]=pt(e);cx.lin
 ["pointerup","pointercancel"].forEach(t=>cv.addEventListener(t,()=>drawing=false));
 $("#sigClear").onclick=()=>{cx.clearRect(0,0,cv.width,cv.height);hasSig=false};
 
+/* ---------- carrocería ---------- */
+const PARTS=[["rin_del","Rin y llanta delantera"],["rin_tras","Rin y llanta trasera"],["horquilla","Horquilla / suspensión del."],["motor","Motor"],["escape","Escape"],["guardalodo_tras","Guardalodo trasero"],["guardalodo_del","Guardalodo delantero"],["cubierta","Cubierta lateral"],["asiento","Asiento"],["tanque","Tanque"],["calavera","Calavera / direccional tras."],["farol","Farol"],["manubrio","Manubrio"],["espejo","Espejo"],["dir_del","Direccional delantera"]];
+const SH={
+rin_del:'<circle cx="460" cy="222" r="62"/>',rin_tras:'<circle cx="140" cy="222" r="62"/>',
+horquilla:'<path d="M428 104L446 104L474 224L458 226Z"/>',
+motor:'<path d="M262 152L372 152L380 226L270 236Z"/><path d="M300 118L346 122L350 154L300 152Z"/>',
+escape:'<path d="M338 232L338 246L128 252L86 238L92 224L130 238Z"/>',
+guardalodo_tras:'<path d="M100 186Q140 150 196 182L188 192Q142 168 108 196Z"/>',
+guardalodo_del:'<path d="M396 200Q460 140 522 196L512 204Q460 166 406 208Z"/>',
+cubierta:'<path d="M380 112L404 122L396 176L372 168Z"/>',
+asiento:'<path d="M112 132Q170 112 244 122L238 146Q170 156 116 148Z"/>',
+tanque:'<path d="M238 122Q248 80 318 82Q382 84 398 122Q330 138 238 122Z"/>',
+calavera:'<path d="M84 132L112 128L114 148L88 150Z"/><circle cx="96" cy="166" r="8"/>',
+farol:'<path d="M448 96Q478 100 476 128Q472 150 446 146Q432 122 448 96Z"/>',
+manubrio:'<path d="M405 82L440 74L452 82L444 92L412 98Z"/>',
+espejo:'<ellipse cx="398" cy="46" rx="16" ry="10" transform="rotate(-18 398 46)"/><path d="M408 78L400 56L404 55L412 77Z"/>',
+dir_del:'<ellipse cx="480" cy="152" rx="11" ry="8"/>'};
+const DECO='<path class="deco" d="M40 286H560M235 205L140 222M232 140L205 208M330 155L300 205"/><circle class="deco" cx="140" cy="222" r="14"/><circle class="deco" cx="460" cy="222" r="14"/>';
+const DT=["","Rayón","Golpe","Roto/faltante"];
+let dmg={L:{},R:{}};
+function bikeSVG(v,st,live){
+  const g=PARTS.map(([id,l])=>`<g class="part s${st[id]||0}"${live?` data-p="${id}" role="button" aria-label="${l}"`:""}><title>${l}</title>${SH[id]}</g>`).join("");
+  return `<svg class="bike" viewBox="0 0 600 300" role="img" aria-label="Moto, lado ${v==="L"?"izquierdo":"derecho"}"><g${v==="R"?' transform="translate(600 0) scale(-1 1)"':""}>${DECO}${g}</g></svg>`}
+const dmgItems=d=>["L","R"].flatMap(v=>Object.entries((d||{})[v]||{}).filter(([,t])=>t).map(([p,t])=>({v,p:(PARTS.find(x=>x[0]===p)||[0,p])[1],t:+t})));
+const chips=d=>{const it=dmgItems(d);return it.length?`<div class="dl">${it.map(i=>`<span class="dc"><i class="k${i.t}"></i>${i.v==="L"?"Izq.":"Der."} · ${esc(i.p)}: ${DT[i.t]}</span>`).join("")}</div>`:`<p class="hint">Sin daños marcados.</p>`};
+function drawBikes(){$("#bkL").innerHTML=bikeSVG("L",dmg.L,1);$("#bkR").innerHTML=bikeSVG("R",dmg.R,1);$("#dmgList").innerHTML=chips(dmg)}
+["L","R"].forEach(v=>$("#bk"+v).addEventListener("click",e=>{const g=e.target.closest(".part");if(!g)return;
+  const p=g.dataset.p,t=+(radio("tool")||1);dmg[v][p]=dmg[v][p]===t?0:t;g.setAttribute("class","part s"+dmg[v][p]);$("#dmgList").innerHTML=chips(dmg)}));
+$("#dmgClear").onclick=()=>{if(dmgItems(dmg).length&&!confirm("¿Quitar todas las marcas de daños?"))return;dmg={L:{},R:{}};drawBikes()};
+
+/* ---------- estatus ---------- */
+const ST=["Recibida","En reparación","Lista","Entregada"];
+function drawStatus(){const cur=current.estatus||"Recibida";
+  $("#stRow").innerHTML=`<span style="align-self:center;font-weight:700">Estatus:</span>`+ST.map(x=>`<button type="button" class="chip${x===cur?" on":""}" data-s="${x}">${x}</button>`).join("");
+  document.querySelectorAll("#stRow .chip").forEach(b=>b.onclick=async()=>{try{await api("recepciones/"+current.id,{method:"PUT",body:JSON.stringify({estatus:b.dataset.s})});current.estatus=b.dataset.s;drawStatus();toast("Estatus: "+b.dataset.s)}catch(e){toast("No se pudo actualizar")}})}
+
 /* ---------- pestañas ---------- */
 function show(v){["vNew","vList","vDet"].forEach(x=>$("#"+x).classList.toggle("hide",x!==v));
   $("#tNew").classList.toggle("on",v==="vNew");$("#tList").classList.toggle("on",v==="vList"||v==="vDet");window.scrollTo(0,0);if(v==="vNew")sizeSig()}
@@ -247,7 +330,7 @@ $("#save").onclick=async()=>{
   const g=k=>$("#"+k).value.trim();
   const rec={id,creado:new Date().toISOString(),nombre:g("nombre"),domicilio:g("domicilio"),tel:g("tel"),wa:g("wa"),correo:g("correo"),promo:radio("promo"),
     marca:g("marca"),modelo:g("modelo"),color:g("color"),placas:g("placas"),serie:g("serie"),motor:g("motor"),km:g("km"),llegada:$("#llegada").value,gas:FUEL[+$("#gas").value],
-    inv:INV.map((n,i)=>({n,v:radio("inv"+i),nota:g("invn"+i)})),est:EST.map((n,i)=>({n,v:radio("est"+i)})),estOtros:g("estOtros"),falla:$("#falla").value.trim(),
+    inv:INV.map((n,i)=>({n,v:radio("inv"+i),nota:g("invn"+i)})),est:EST.map((n,i)=>({n,v:radio("est"+i)})),estOtros:g("estOtros"),falla:$("#falla").value.trim(),estatus:"Recibida",dmg:JSON.parse(JSON.stringify(dmg)),dmgNota:$("#dmgNota").value.trim(),
     total:+$("#total").value||0,anticipo:+$("#anticipo").value||0,gar:radio("gar"),gDesde:$("#gDesde").value,gHasta:$("#gHasta").value,gExc:g("gExc"),
     fotos:photos.slice(),firma:hasSig?cv.toDataURL("image/png"):""};
   const btn=$("#save");btn.disabled=true;
@@ -255,12 +338,17 @@ $("#save").onclick=async()=>{
   catch(e){toast("No se pudo guardar: "+e.message)}finally{btn.disabled=false}};
 function resetForm(){document.querySelectorAll("#vNew input[type=text],#vNew input[type=tel],#vNew input[type=email],#vNew input[type=number],#vNew input[type=date],#vNew textarea").forEach(e=>e.value="");
   document.querySelectorAll("#vNew input[type=radio]").forEach(e=>e.checked=false);document.querySelector('input[name="gar"][value="No"]').checked=true;
-  $("#marca").value="Yamaha";$("#llegada").value=nowLocal();$("#gas").value=2;photos=[];drawThumbs();calc();sizeSig()}
+  $("#marca").value="Yamaha";$("#llegada").value=nowLocal();$("#gas").value=2;photos=[];dmg={L:{},R:{}};drawBikes();document.querySelector('input[name="tool"][value="1"]').checked=true;drawThumbs();calc();sizeSig()}
 
 /* ---------- historial y detalle ---------- */
-async function renderList(){let all=[];try{all=await getAll()}catch(e){toast("No se pudo cargar el historial")}
-  $("#list").innerHTML=all.length?all.map(r=>`<div class="rec" data-id="${r.id}" tabindex="0"><div><b>${esc(r.nombre)}</b><br><small>${esc(r.marca)} ${esc(r.modelo)} · ${esc(r.placas)||"sin placas"}<br>${fmtDT(r.creado)}</small></div><span class="badge">#${r.id}</span></div>`).join(""):`<div class="empty">Todavía no hay recepciones guardadas.</div>`;
+let LIST=[];
+async function renderList(){try{LIST=await getAll()}catch(e){toast("No se pudo cargar el historial")}drawList()}
+function drawList(){const q=$("#q").value.toLowerCase().trim(),today=new Date().toDateString();
+  $("#stats").innerHTML=[["Órdenes",LIST.length],["En taller",LIST.filter(r=>(r.estatus||"Recibida")!=="Entregada").length],["Hoy",LIST.filter(r=>new Date(r.creado).toDateString()===today).length]].map(([l,n])=>`<div class="stat"><b>${n}</b><span>${l}</span></div>`).join("");
+  const all=LIST.filter(r=>!q||[r.id,r.nombre,r.placas,r.marca,r.modelo].join(" ").toLowerCase().includes(q));
+  $("#list").innerHTML=all.length?all.map(r=>`<div class="rec" data-id="${r.id}" tabindex="0"><div><b>${esc(r.nombre)}</b><br><small>${esc(r.marca)} ${esc(r.modelo)} · ${esc(r.placas)||"sin placas"}<br>${fmtDT(r.creado)}</small></div><div style="text-align:right"><span class="badge">#${r.id}</span><br><small class="stp">${esc(r.estatus||"Recibida")}</small></div></div>`).join(""):`<div class="empty">${LIST.length?"Sin resultados.":"Todavía no hay recepciones guardadas."}</div>`;
   document.querySelectorAll(".rec").forEach(e=>{const go=async()=>{try{openDetail(await getOne(+e.dataset.id))}catch(x){toast("No se pudo abrir la orden")}};e.onclick=go;e.onkeydown=k=>{if(k.key==="Enter")go()}})}
+$("#q").oninput=drawList;$("#logout").onclick=()=>showWelcome();
 function openDetail(r){current=r;
   const inv=r.inv.filter(i=>i.v||i.nota).map(i=>`<tr><td>${esc(i.n)}</td><td>${esc(i.v)}</td><td>${esc(i.nota)}</td></tr>`).join("");
   const est=r.est.filter(e=>e.v).map(e=>`<tr><td>${esc(e.n)}</td><td>${esc(e.v)}</td></tr>`).join("");
@@ -268,6 +356,7 @@ function openDetail(r){current=r;
   <h3>Cliente</h3><table><tr><td>Nombre</td><td>${esc(r.nombre)}</td></tr><tr><td>Domicilio</td><td>${esc(r.domicilio)}</td></tr><tr><td>Teléfono</td><td>${esc(r.tel)}</td></tr><tr><td>WhatsApp</td><td>${esc(r.wa)}</td></tr><tr><td>Correo</td><td>${esc(r.correo)}</td></tr><tr><td>Promociones</td><td>${esc(r.promo)}</td></tr></table>
   <h3>Moto</h3><table><tr><td>Marca / modelo</td><td>${esc(r.marca)} ${esc(r.modelo)}</td></tr><tr><td>Color</td><td>${esc(r.color)}</td></tr><tr><td>Placas</td><td>${esc(r.placas)}</td></tr><tr><td>No. serie</td><td>${esc(r.serie)}</td></tr><tr><td>No. motor</td><td>${esc(r.motor)}</td></tr><tr><td>Kilometraje</td><td>${esc(r.km)} km</td></tr><tr><td>Gasolina</td><td>${esc(r.gas)}</td></tr><tr><td>Llegada</td><td>${fmtDT(r.llegada)}</td></tr></table>
   <h3>Falla principal</h3><p>${esc(r.falla)||"—"}</p>
+  ${r.dmg?`<h3>Estado de carrocería</h3><div class="bikes">${bikeSVG("L",r.dmg.L||{})}${bikeSVG("R",r.dmg.R||{})}</div>${chips(r.dmg)}${r.dmgNota?`<p>${esc(r.dmgNota)}</p>`:""}`:""}
   ${inv?`<h3>Inventario</h3><table>${inv}</table>`:""}${est||r.estOtros?`<h3>Estado general</h3><table>${est}${r.estOtros?`<tr><td>Otros</td><td>${esc(r.estOtros)}</td></tr>`:""}</table>`:""}
   <h3>Presupuesto</h3><table><tr><td>Total</td><td>${money(r.total)}</td></tr><tr><td>Anticipo</td><td>${money(r.anticipo)}</td></tr><tr><td>Restan</td><td><b>${money(r.total-r.anticipo)}</b></td></tr><tr><td>Garantía</td><td>${esc(r.gar)}${r.gDesde?` · del ${esc(r.gDesde)} al ${esc(r.gHasta)}`:""}${r.gExc?` · excepto: ${esc(r.gExc)}`:""}</td></tr></table>
   ${r.fotos.length?`<h3>Fotos</h3><div class="ph">${r.fotos.map(f=>`<img src="${f}" alt="Foto de la moto">`).join("")}</div>`:""}
@@ -275,12 +364,12 @@ function openDetail(r){current=r;
   const num=(r.wa||r.tel).replace(/\D/g,"").slice(-10);
   const msg=`Hola ${r.nombre}, recibimos tu ${r.marca} ${r.modelo} en MOTO TAPIA. Orden #${r.id}.${r.falla?" Falla reportada: "+r.falla+".":""} Presupuesto: ${money(r.total)}, anticipo ${money(r.anticipo)}, restan ${money(r.total-r.anticipo)}. ¡Gracias por tu confianza!`;
   $("#dWa").href=num.length===10?`https://wa.me/52${num}?text=${encodeURIComponent(msg)}`:"#";
-  show("vDet")}
+  drawStatus();show("vDet")}
 $("#dBack").onclick=()=>{renderList();show("vList")};
 $("#dPrint").onclick=()=>window.print();
 $("#dDel").onclick=async()=>{if(current&&confirm("¿Borrar la recepción #"+current.id+"? No se puede deshacer.")){await delRec(current.id);toast("Recepción borrada");renderList();show("vList")}};
 
-sizeSig();if(PIN)showApp();else showWelcome();
+drawBikes();sizeSig();if(PIN)showApp();else showWelcome();
 addEventListener("resize",()=>{if(!$("#vNew").classList.contains("hide")&&!hasSig)sizeSig()});
 </script>
 </body>
