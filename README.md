@@ -9,15 +9,13 @@ fotos, firma digital, presupuesto, historial, PDF y envío por WhatsApp.
 2. En https://vercel.com → **Add New → Project** → elige el repositorio → **Deploy**.
 3. En tu proyecto de Vercel: **Storage → Create Database → Neon (Postgres)** → conéctalo al proyecto.
    Esto crea solo la variable `DATABASE_URL`. La tabla se crea sola la primera vez.
-4. **Settings → Environment Variables** → agrega `APP_PIN` con el PIN que usará tu equipo (ej. `4821`).
-5. **Deployments → ⋯ → Redeploy** para que tome las variables.
+4. **Deployments → ⋯ → Redeploy** para que tome la variable de la base de datos.
 6. Abre tu dirección `.vercel.app` en Safari del iPhone → Compartir → **Agregar a pantalla de inicio**.
 
 ## Cómo funciona
-- `public/` → la aplicación (lo que ve el iPhone).
-- `api/` → funciones que guardan y leen de la base de datos, protegidas con el PIN.
-- Para cambiar el PIN: cambia `APP_PIN` en Vercel y haz Redeploy.
+- `public/` → la aplicación (lo que ve el iPad/iPhone).
+- `api/` → funciones que guardan y leen de la base de datos.
 
 ## Límites a tener en cuenta
 - Vercel acepta hasta ~4.5 MB por guardado: unas 12 fotos por orden (se comprimen solas).
-- El PIN protege el acceso, pero es una seguridad básica. No pongas aquí datos bancarios.
+- **La app no tiene contraseña**: cualquiera con el enlace puede ver y guardar recepciones. Si más adelante quieres protegerla, se puede volver a agregar un PIN o un usuario/contraseña.
