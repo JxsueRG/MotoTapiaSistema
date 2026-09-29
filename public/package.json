@@ -1,0 +1,7 @@
+{
+  "name": "moto-tapia",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Recepción digital de motocicletas - MOTO TAPIA",
+  "dependencies": { "@neondatabase/serverless": "^0.10.4" }
+}
