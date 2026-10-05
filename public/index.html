@@ -64,16 +64,6 @@ canvas#sig{width:100%;height:170px;background:#fff;border:2px dashed var(--blue)
 .sheet table{width:100%;border-collapse:collapse;font-size:14px}.sheet td{padding:3px 4px;border-bottom:1px solid var(--line);vertical-align:top}
 .sheet .ph{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.sheet .ph img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px}
 .sheet img.firma{max-width:260px;background:#fff;border:1px solid var(--line);border-radius:8px}
-#welcome{position:fixed;inset:0;z-index:20;background:#15110e;color:#fff;display:flex;align-items:center;justify-content:center;padding:24px;border-bottom:10px solid var(--yellow)}
-.w-in{width:100%;max-width:380px}
-.w-logo{font:800 56px/.9 "Barlow Condensed",Impact,sans-serif;letter-spacing:1px}
-.w-logo span{display:block;color:var(--yellow);font-size:76px}
-.w-tag{margin:8px 0 34px;opacity:.8}
-.w-h{font:800 36px "Barlow Condensed",Impact,sans-serif;margin:0 0 6px}
-.w-sub{margin:0 0 22px;opacity:.88}
-#welcome label{color:#fff;opacity:.85}
-#welcome input{background:#fff;color:#14172b;font-size:22px;letter-spacing:8px;text-align:center}
-#wErr{color:#ffb4bd;min-height:22px;margin:8px 0;font-weight:600}
 .hb{display:flex;gap:12px;align-items:center;margin-bottom:10px}.hb img{border-radius:10px}.hb p{margin:0}.w-img{display:block;border-radius:22px;margin:0 0 30px}.shead{display:flex;gap:12px;align-items:center;margin-bottom:6px}.shead img{border-radius:10px}.shead h2{margin:0}main{max-width:1180px}
 #vNew{display:grid;grid-template-columns:1fr;gap:0 14px;grid-auto-flow:dense}
 .wide{grid-column:1/-1}
@@ -100,6 +90,8 @@ svg.bike{width:100%;height:auto;display:block;background:var(--bg);border-radius
 .chip{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:10px 16px;font:700 14px Barlow,sans-serif}
 .chip.on{background:var(--blue);border-color:var(--blue);color:#fff}
 .stp{color:var(--mute);font-weight:600}
+.mrow{display:flex;justify-content:space-between;align-items:center;border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-bottom:6px}
+.ed-g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 @media(min-width:800px){
  #vNew{grid-template-columns:1fr 1fr;align-items:start}
@@ -113,17 +105,9 @@ svg.bike{width:100%;height:auto;display:block;background:var(--bg);border-radius
 </style>
 </head>
 <body>
-<div id="welcome" class="hide"><div class="w-in">
-  <img class="w-img" src="/logo.png" alt="Logo Moto Tapia" width="132" height="132">
-  <h1 class="w-h">Bienvenido</h1>
-  <p class="w-sub">Recepción digital: datos, fotos, inventario y firma del cliente en un solo lugar.</p>
-  <form id="wForm"><label for="pin">PIN de acceso</label>
-  <input id="pin" type="password" inputmode="numeric" autocomplete="current-password">
-  <div id="wErr" role="alert"></div><button class="btn y big" type="submit">Entrar</button></form>
-</div></div>
 <header>
-  <div class="hb"><img src="/logo.png" alt="Logo Moto Tapia" width="52" height="52"><div><h1>MOTO <span>TAPIA</span></h1><p>Recepción digital de motocicletas</p></div><button id="logout" class="lo" type="button">Salir</button></div>
-  <nav><button id="tNew" class="on">Nueva recepción</button><button id="tList">Historial</button></nav>
+  <div class="hb"><img src="/logo.png" alt="Logo Moto Tapia" width="52" height="52"><div><h1>MOTO <span>TAPIA</span></h1><p>Recepción digital de motocicletas</p></div></div>
+  <nav><button id="tNew" class="on">Nueva recepción</button><button id="tList">Historial</button><button id="tTeam">Equipo</button></nav>
 </header>
 <main>
 <!-- FORMULARIO -->
@@ -206,15 +190,29 @@ svg.bike{width:100%;height:auto;display:block;background:var(--bg);border-radius
 <!-- HISTORIAL -->
 <div id="vList" class="hide"><div class="stats" id="stats"></div><input type="search" id="q" placeholder="Buscar por nombre, placas, moto o número de orden"><div id="list"></div></div>
 
+<!-- EQUIPO -->
+<div id="vTeam" class="hide">
+  <section class="card wide"><h2>Mecánicos del taller</h2>
+    <p class="hint">Agrega a tu equipo para poder asignarles órdenes y avisarles por WhatsApp.</p>
+    <div class="g2"><div><label for="mNombre">Nombre</label><input type="text" id="mNombre" placeholder="Ej. Beto"></div>
+    <div><label for="mTel">WhatsApp (10 dígitos)</label><input type="tel" id="mTel" inputmode="tel"></div></div>
+    <button class="btn y" id="mAdd" type="button" style="margin-top:8px">Agregar mecánico</button>
+    <div id="mList" style="margin-top:14px"></div>
+  </section>
+</div>
+
 <!-- DETALLE -->
 <div id="vDet" class="hide">
   <div class="row noprint" style="margin-bottom:12px">
     <button class="btn g" id="dBack" type="button">Volver</button>
     <button class="btn" id="dPrint" type="button">Imprimir / guardar PDF</button>
+    <button class="btn g" id="dEdit" type="button">Editar</button>
     <a class="btn y" id="dWa" target="_blank" rel="noopener" style="text-decoration:none">Enviar por WhatsApp</a>
     <button class="btn r" id="dDel" type="button">Borrar</button>
   </div>
   <div class="row noprint" id="stRow" style="margin-bottom:12px"></div>
+  <div class="row noprint" id="mecRow" style="margin-bottom:12px;align-items:center;gap:8px"></div>
+  <div class="card wide noprint hide" id="editBox" style="margin-bottom:12px"></div>
   <section class="card sheet" id="sheet"></section>
 </div>
 </main>
@@ -228,23 +226,18 @@ const FUEL=["Vacío","¼","½","¾","Lleno"];
 let db=null,mem=[],photos=[],current=null,hasSig=false;
 
 /* ---------- base de datos (API + Postgres) ---------- */
-const PIN_KEY="mt_pin";
-let PIN="";try{PIN=localStorage.getItem(PIN_KEY)||""}catch(e){}
 async function api(path,opt={}){
-  const r=await fetch("/api/"+path,{...opt,headers:{"Content-Type":"application/json","x-pin":PIN}});
-  if(r.status===401){showWelcome("PIN incorrecto");throw new Error("401")}
+  const r=await fetch("/api/"+path,{...opt,headers:{"Content-Type":"application/json"}});
   if(!r.ok)throw new Error((await r.json().catch(()=>({}))).error||"Error del servidor");
   return r.json()}
 const getAll=()=>api("recepciones");
 const getOne=id=>api("recepciones/"+id);
 const putRec=o=>api("recepciones",{method:"POST",body:JSON.stringify(o)});
 const delRec=id=>api("recepciones/"+id,{method:"DELETE"});
-function showWelcome(err){PIN="";try{localStorage.removeItem(PIN_KEY)}catch(e){}$("#welcome").classList.remove("hide");$("#wErr").textContent=err||"";$("#pin").value=""}
-function showApp(){$("#welcome").classList.add("hide");sizeSig()}
-$("#wForm").onsubmit=async e=>{e.preventDefault();const t=$("#pin").value.trim();if(!t)return;PIN=t;
-  try{await api("recepciones");try{localStorage.setItem(PIN_KEY,PIN)}catch(x){}showApp()}
-  catch(x){if(x.message!=="401")$("#wErr").textContent=x.message}};
-
+const getMecs=()=>api("mecanicos");
+const addMec=o=>api("mecanicos",{method:"POST",body:JSON.stringify(o)});
+const delMec=id=>api("mecanicos/"+id,{method:"DELETE"});
+const editRec=(id,o)=>api("recepciones/"+id,{method:"PUT",body:JSON.stringify(o)});
 /* ---------- utilidades ---------- */
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money=n=>"$"+(Number(n)||0).toLocaleString("es-MX");
@@ -313,13 +306,55 @@ $("#dmgClear").onclick=()=>{if(dmgItems(dmg).length&&!confirm("¿Quitar todas la
 const ST=["Recibida","En reparación","Lista","Entregada"];
 function drawStatus(){const cur=current.estatus||"Recibida";
   $("#stRow").innerHTML=`<span style="align-self:center;font-weight:700">Estatus:</span>`+ST.map(x=>`<button type="button" class="chip${x===cur?" on":""}" data-s="${x}">${x}</button>`).join("");
-  document.querySelectorAll("#stRow .chip").forEach(b=>b.onclick=async()=>{try{await api("recepciones/"+current.id,{method:"PUT",body:JSON.stringify({estatus:b.dataset.s})});current.estatus=b.dataset.s;drawStatus();toast("Estatus: "+b.dataset.s)}catch(e){toast("No se pudo actualizar")}})}
+  document.querySelectorAll("#stRow .chip").forEach(b=>b.onclick=async()=>{try{await editRec(current.id,{estatus:b.dataset.s});current.estatus=b.dataset.s;drawStatus();toast("Estatus: "+b.dataset.s)}catch(e){toast("No se pudo actualizar")}})}
+
+/* ---------- mecánico asignado + aviso por WhatsApp ---------- */
+async function drawMec(){
+  if(!MECS.length){try{MECS=await getMecs()}catch(e){}}
+  const opts=MECS.map(m=>`<option value="${m.id}" ${String(m.id)===String(current.mecanico||"")?"selected":""}>${esc(m.nombre)}</option>`).join("");
+  $("#mecRow").innerHTML=`<span style="font-weight:700">Mecánico:</span>
+    <select id="mecSel" style="flex:1;min-width:160px;padding:9px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink)"><option value="">Sin asignar</option>${opts}</select>
+    <button type="button" class="btn y" id="mecAvisar" style="padding:9px 14px">Asignar y avisar por WhatsApp</button>`;
+  if(!MECS.length)$("#mecRow").insertAdjacentHTML("beforeend",'<span class="hint" style="margin:0">Agrega mecánicos en la pestaña Equipo.</span>');
+  $("#mecAvisar").onclick=async()=>{
+    const id=$("#mecSel").value,m=MECS.find(x=>String(x.id)===id);
+    try{await editRec(current.id,{mecanico:id});current.mecanico=id}catch(e){return toast("No se pudo guardar el mecánico")}
+    if(!m)return toast("Mecánico asignado");
+    const r=current;
+    const msg=`Hola ${m.nombre}, se te asignó la orden #${r.id} en MOTO TAPIA: ${r.marca} ${r.modelo}${r.placas?" ("+r.placas+")":""}.${r.falla?" Falla reportada: "+r.falla+".":""} Cliente: ${r.nombre}.`;
+    window.open(`https://wa.me/52${m.tel}?text=${encodeURIComponent(msg)}`,"_blank");
+    toast("Mecánico asignado y avisado")}}
+
+/* ---------- editar orden ---------- */
+const EDIT_F=[["tel","Teléfono"],["wa","WhatsApp"],["domicilio","Domicilio"],["correo","Correo"],["color","Color"],["placas","Placas"],["km","Kilometraje"],["falla","Falla principal",1],["total","Presupuesto total",0,"number"],["anticipo","Anticipo",0,"number"],["gExc","Garantía, a excepción de"]];
+let editing=false;
+function drawEditBtn(){$("#dEdit").textContent=editing?"Cancelar edición":"Editar"}
+function openEdit(){editing=true;drawEditBtn();const r=current;
+  $("#editBox").classList.remove("hide");
+  $("#editBox").innerHTML=`<h2>Editar datos de la orden</h2><div class="ed-g">${EDIT_F.map(([k,l,big,ty])=>big?"":`<div><label for="e_${k}">${l}</label><input type="${ty||"text"}" id="e_${k}" value="${esc(r[k]??"")}"></div>`).join("")}</div>
+    ${EDIT_F.filter(f=>f[2]).map(([k,l])=>`<label for="e_${k}">${l}</label><textarea id="e_${k}">${esc(r[k]??"")}</textarea>`).join("")}
+    <button class="btn y" id="eSave" type="button" style="margin-top:10px">Guardar cambios</button>`;
+  $("#eSave").onclick=async()=>{
+    const upd={};EDIT_F.forEach(([k,,,ty])=>{const v=$("#e_"+k).value;upd[k]=ty==="number"?(+v||0):v.trim?v.trim():v});
+    try{await editRec(current.id,upd);Object.assign(current,upd);closeEdit();openDetail(current)}catch(e){toast("No se pudo guardar")}}}
+function closeEdit(){editing=false;drawEditBtn();$("#editBox").classList.add("hide");$("#editBox").innerHTML=""}
+$("#dEdit").onclick=()=>editing?closeEdit():openEdit();
 
 /* ---------- pestañas ---------- */
-function show(v){["vNew","vList","vDet"].forEach(x=>$("#"+x).classList.toggle("hide",x!==v));
-  $("#tNew").classList.toggle("on",v==="vNew");$("#tList").classList.toggle("on",v==="vList"||v==="vDet");window.scrollTo(0,0);if(v==="vNew")sizeSig()}
+function show(v){["vNew","vList","vDet","vTeam"].forEach(x=>$("#"+x).classList.toggle("hide",x!==v));
+  $("#tNew").classList.toggle("on",v==="vNew");$("#tList").classList.toggle("on",v==="vList"||v==="vDet");$("#tTeam").classList.toggle("on",v==="vTeam");window.scrollTo(0,0);if(v==="vNew")sizeSig()}
 $("#tNew").onclick=()=>show("vNew");
 $("#tList").onclick=()=>{renderList();show("vList")};
+$("#tTeam").onclick=()=>{renderTeam();show("vTeam")};
+
+/* ---------- equipo / mecánicos ---------- */
+let MECS=[];
+async function renderTeam(){try{MECS=await getMecs()}catch(e){toast("No se pudo cargar el equipo")}drawTeam()}
+function drawTeam(){$("#mList").innerHTML=MECS.length?MECS.map(m=>`<div class="mrow"><span><b>${esc(m.nombre)}</b> · ${esc(m.tel)}</span><button type="button" class="btn r" data-id="${m.id}" style="padding:7px 12px">Quitar</button></div>`).join(""):`<p class="hint">Todavía no agregas mecánicos.</p>`;
+  document.querySelectorAll("#mList button").forEach(b=>b.onclick=async()=>{if(!confirm("¿Quitar a este mecánico?"))return;try{await delMec(+b.dataset.id);renderTeam()}catch(e){toast("No se pudo quitar")}})}
+$("#mAdd").onclick=async()=>{const nombre=$("#mNombre").value.trim(),tel=$("#mTel").value.replace(/\D/g,"").slice(-10);
+  if(!nombre||tel.length!==10)return toast("Pon el nombre y un WhatsApp a 10 dígitos");
+  try{await addMec({nombre,tel});$("#mNombre").value="";$("#mTel").value="";renderTeam();toast("Mecánico agregado")}catch(e){toast("No se pudo agregar")}};
 
 /* ---------- guardar ---------- */
 $("#save").onclick=async()=>{
@@ -348,7 +383,7 @@ function drawList(){const q=$("#q").value.toLowerCase().trim(),today=new Date().
   const all=LIST.filter(r=>!q||[r.id,r.nombre,r.placas,r.marca,r.modelo].join(" ").toLowerCase().includes(q));
   $("#list").innerHTML=all.length?all.map(r=>`<div class="rec" data-id="${r.id}" tabindex="0"><div><b>${esc(r.nombre)}</b><br><small>${esc(r.marca)} ${esc(r.modelo)} · ${esc(r.placas)||"sin placas"}<br>${fmtDT(r.creado)}</small></div><div style="text-align:right"><span class="badge">#${r.id}</span><br><small class="stp">${esc(r.estatus||"Recibida")}</small></div></div>`).join(""):`<div class="empty">${LIST.length?"Sin resultados.":"Todavía no hay recepciones guardadas."}</div>`;
   document.querySelectorAll(".rec").forEach(e=>{const go=async()=>{try{openDetail(await getOne(+e.dataset.id))}catch(x){toast("No se pudo abrir la orden")}};e.onclick=go;e.onkeydown=k=>{if(k.key==="Enter")go()}})}
-$("#q").oninput=drawList;$("#logout").onclick=()=>showWelcome();
+$("#q").oninput=drawList;
 function openDetail(r){current=r;
   const inv=r.inv.filter(i=>i.v||i.nota).map(i=>`<tr><td>${esc(i.n)}</td><td>${esc(i.v)}</td><td>${esc(i.nota)}</td></tr>`).join("");
   const est=r.est.filter(e=>e.v).map(e=>`<tr><td>${esc(e.n)}</td><td>${esc(e.v)}</td></tr>`).join("");
@@ -356,6 +391,7 @@ function openDetail(r){current=r;
   <h3>Cliente</h3><table><tr><td>Nombre</td><td>${esc(r.nombre)}</td></tr><tr><td>Domicilio</td><td>${esc(r.domicilio)}</td></tr><tr><td>Teléfono</td><td>${esc(r.tel)}</td></tr><tr><td>WhatsApp</td><td>${esc(r.wa)}</td></tr><tr><td>Correo</td><td>${esc(r.correo)}</td></tr><tr><td>Promociones</td><td>${esc(r.promo)}</td></tr></table>
   <h3>Moto</h3><table><tr><td>Marca / modelo</td><td>${esc(r.marca)} ${esc(r.modelo)}</td></tr><tr><td>Color</td><td>${esc(r.color)}</td></tr><tr><td>Placas</td><td>${esc(r.placas)}</td></tr><tr><td>No. serie</td><td>${esc(r.serie)}</td></tr><tr><td>No. motor</td><td>${esc(r.motor)}</td></tr><tr><td>Kilometraje</td><td>${esc(r.km)} km</td></tr><tr><td>Gasolina</td><td>${esc(r.gas)}</td></tr><tr><td>Llegada</td><td>${fmtDT(r.llegada)}</td></tr></table>
   <h3>Falla principal</h3><p>${esc(r.falla)||"—"}</p>
+  ${r.mecanico?`<p><b>Mecánico asignado:</b> ${esc((MECS.find(m=>String(m.id)===String(r.mecanico))||{}).nombre||"—")}</p>`:""}
   ${r.dmg?`<h3>Estado de carrocería</h3><div class="bikes">${bikeSVG("L",r.dmg.L||{})}${bikeSVG("R",r.dmg.R||{})}</div>${chips(r.dmg)}${r.dmgNota?`<p>${esc(r.dmgNota)}</p>`:""}`:""}
   ${inv?`<h3>Inventario</h3><table>${inv}</table>`:""}${est||r.estOtros?`<h3>Estado general</h3><table>${est}${r.estOtros?`<tr><td>Otros</td><td>${esc(r.estOtros)}</td></tr>`:""}</table>`:""}
   <h3>Presupuesto</h3><table><tr><td>Total</td><td>${money(r.total)}</td></tr><tr><td>Anticipo</td><td>${money(r.anticipo)}</td></tr><tr><td>Restan</td><td><b>${money(r.total-r.anticipo)}</b></td></tr><tr><td>Garantía</td><td>${esc(r.gar)}${r.gDesde?` · del ${esc(r.gDesde)} al ${esc(r.gHasta)}`:""}${r.gExc?` · excepto: ${esc(r.gExc)}`:""}</td></tr></table>
@@ -364,12 +400,12 @@ function openDetail(r){current=r;
   const num=(r.wa||r.tel).replace(/\D/g,"").slice(-10);
   const msg=`Hola ${r.nombre}, recibimos tu ${r.marca} ${r.modelo} en MOTO TAPIA. Orden #${r.id}.${r.falla?" Falla reportada: "+r.falla+".":""} Presupuesto: ${money(r.total)}, anticipo ${money(r.anticipo)}, restan ${money(r.total-r.anticipo)}. ¡Gracias por tu confianza!`;
   $("#dWa").href=num.length===10?`https://wa.me/52${num}?text=${encodeURIComponent(msg)}`:"#";
-  drawStatus();show("vDet")}
+  closeEdit();drawStatus();drawMec();show("vDet")}
 $("#dBack").onclick=()=>{renderList();show("vList")};
 $("#dPrint").onclick=()=>window.print();
 $("#dDel").onclick=async()=>{if(current&&confirm("¿Borrar la recepción #"+current.id+"? No se puede deshacer.")){await delRec(current.id);toast("Recepción borrada");renderList();show("vList")}};
 
-drawBikes();sizeSig();if(PIN)showApp();else showWelcome();
+drawBikes();sizeSig();getMecs().then(m=>MECS=m).catch(()=>{});
 addEventListener("resize",()=>{if(!$("#vNew").classList.contains("hide")&&!hasSig)sizeSig()});
 </script>
 </body>
