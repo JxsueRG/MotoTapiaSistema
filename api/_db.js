@@ -2,9 +2,14 @@ const { neon } = require("@neondatabase/serverless");
 const sql = neon(process.env.DATABASE_URL || "postgres://x:x@localhost/x");
 let ready;
 function init() {
-  return ready || (ready = sql`create table if not exists recepciones(
-    id serial primary key, creado timestamptz not null default now(),
-    nombre text, marca text, modelo text, placas text, data jsonb not null)`);
+  return ready || (ready = (async () => {
+    await sql`create table if not exists recepciones(
+      id serial primary key, creado timestamptz not null default now(),
+      nombre text, marca text, modelo text, placas text, data jsonb not null)`;
+    await sql`create table if not exists mecanicos(
+      id serial primary key, creado timestamptz not null default now(),
+      nombre text not null, tel text not null)`;
+  })().catch(e => { ready = null; throw e; }));
 }
 function auth(req, res) {
   if (!process.env.DATABASE_URL) {
