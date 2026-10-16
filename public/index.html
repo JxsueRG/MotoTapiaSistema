@@ -208,6 +208,7 @@ svg.bike{width:100%;height:auto;display:block;background:var(--bg);border-radius
     <button class="btn" id="dPrint" type="button">Imprimir / guardar PDF</button>
     <button class="btn g" id="dEdit" type="button">Editar</button>
     <a class="btn y" id="dWa" target="_blank" rel="noopener" style="text-decoration:none">Enviar por WhatsApp</a>
+    <button class="btn y" id="dWaApi" type="button">Enviar PDF automático (API)</button>
     <button class="btn r" id="dDel" type="button">Borrar</button>
   </div>
   <div class="row noprint" id="stRow" style="margin-bottom:12px"></div>
@@ -218,6 +219,7 @@ svg.bike{width:100%;height:auto;display:block;background:var(--bg);border-radius
 </main>
 <div id="toast"></div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script>
 const $=s=>document.querySelector(s);
 const INV=["Tablero completo","Direcciones","Claxon","Botones","Espejos retrovisores","Calavera stop","Porta placa","Asiento","Manijas de freno","Chicote de freno","Manija de clutch","Chicote de clutch","Escape","Posapiés delanteros","Posapiés traseros","Rin delantero","Rin trasero","Motor","Cable de bujía","Bujía(s)","Accesorios","Otros"];
@@ -403,6 +405,26 @@ function openDetail(r){current=r;
   closeEdit();drawStatus();drawMec();show("vDet")}
 $("#dBack").onclick=()=>{renderList();show("vList")};
 $("#dPrint").onclick=()=>window.print();
+/* ---------- Enviar PDF por la API de WhatsApp (Meta) ---------- */
+$("#dWaApi").onclick=async()=>{
+  if(!current)return;
+  const b=$("#dWaApi");b.disabled=true;const t0=b.textContent;b.textContent="Generando PDF...";
+  try{
+    // PDF sin fotos para que pese poco (Vercel acepta ~4.5 MB por envío)
+    const el=$("#sheet").cloneNode(true);
+    el.querySelectorAll(".ph").forEach(x=>{const h=x.previousElementSibling;if(h&&h.tagName==="H3")h.remove();x.remove()});
+    const uri=await html2pdf().set({margin:8,image:{type:"jpeg",quality:.8},html2canvas:{scale:1.4},
+      jsPDF:{unit:"mm",format:"a4",orientation:"portrait"}}).from(el).outputPdf("datauristring");
+    const pdf=uri.split(",")[1];
+    if(pdf.length>4e6)throw new Error("El PDF es muy pesado");
+    b.textContent="Enviando...";
+    const r=await fetch("/api/enviar",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({tipo:"orden",id:current.id,pdf})});
+    const d=await r.json();
+    toast(r.ok?"PDF enviado por WhatsApp ✅":(d.error||"No se pudo enviar"));
+  }catch(e){toast(e.message||"No se pudo enviar")}
+  b.disabled=false;b.textContent=t0;
+};
 $("#dDel").onclick=async()=>{if(current&&confirm("¿Borrar la recepción #"+current.id+"? No se puede deshacer.")){await delRec(current.id);toast("Recepción borrada");renderList();show("vList")}};
 
 drawBikes();sizeSig();getMecs().then(m=>MECS=m).catch(()=>{});
