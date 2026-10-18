@@ -23,7 +23,7 @@ module.exports = async (req, res) => {
 
   out.push("<h2>1. Variables en Vercel (entorno Production)</h2>");
   for (const n of ["WHATSAPP_TOKEN", "PHONE_NUMBER_ID", "VERIFY_TOKEN"]) out.push(`<div class="f">${env(n) ? ok(n + " configurada") : mal(n + " FALTA")}</div>`);
-  out.push(`<div class="f">${env("WA_APP_SECRET") ? ok("WA_APP_SECRET configurada (" + process.env.WA_APP_SECRET.length + " caracteres)") : av("WA_APP_SECRET vacía: el bot funciona, pero no valida que los mensajes vengan de Meta")}</div>`);
+  out.push(`<div class="f">${env("WA_APP_SECRET") ? ok("WA_APP_SECRET configurada (" + process.env.WA_APP_SECRET.length + " caracteres; empieza con " + esc(process.env.WA_APP_SECRET.slice(0, 2)) + " y termina con " + esc(process.env.WA_APP_SECRET.slice(-2)) + ")") : av("WA_APP_SECRET vacía: el bot funciona, pero no valida que los mensajes vengan de Meta")}</div>`);
 
   const tok = await g("GET", `debug_token?input_token=${encodeURIComponent(process.env.WHATSAPP_TOKEN || "")}`);
   const num = await g("GET", `${process.env.PHONE_NUMBER_ID}?fields=display_phone_number,verified_name,quality_rating,status,webhook_configuration`);

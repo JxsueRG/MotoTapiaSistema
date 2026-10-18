@@ -46,7 +46,13 @@ module.exports = async (req, res) => {
     const esperada = "sha256=" + crypto.createHmac("sha256", secreto).update(raw).digest("hex");
     const firma = String(req.headers["x-hub-signature-256"] || "");
     if (firma.length !== esperada.length || !crypto.timingSafeEqual(Buffer.from(firma), Buffer.from(esperada))) {
-      await log(`POST RECHAZADO: firma inválida. Revisa WA_APP_SECRET en Vercel (tiene ${secreto.length} caracteres; debe ser la "Clave secreta" de la app, sin espacios)`);
+      const pista = `empieza con "${secreto.slice(0, 2)}" y termina con "${secreto.slice(-2)}"`;
+      let nota = "";
+      if (datos) {
+        const alt = "sha256=" + crypto.createHmac("sha256", secreto).update(JSON.stringify(datos)).digest("hex");
+        if (alt === firma) nota = " | La firma SÍ coincide con el cuerpo re-serializado: la clave está bien, Vercel alteró el cuerpo";
+      }
+      await log(`POST RECHAZADO: firma inválida. WA_APP_SECRET en Vercel: ${secreto.length} caracteres, ${pista} (compáralo con la Clave secreta en Meta)${nota}`);
       return res.status(403).end();
     }
   } else if (!secreto) {
