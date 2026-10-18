@@ -2,7 +2,9 @@ const V = process.env.WA_API_VERSION || "v21.0";
 const BASE = `https://graph.facebook.com/${V}`;
 const TOKEN = () => process.env.WHATSAPP_TOKEN;
 const PHONE = () => process.env.PHONE_NUMBER_ID;
-const LANG = "es_MX";
+// Idioma de cada plantilla tal como está en Meta ("es" = Spanish). cita_mecanico quedó en inglés.
+const LANGS = { cita_mecanico: "en" };
+const lang = n => LANGS[n] || "es";
 
 function numero(t) {
   let n = String(t || "").replace(/\D/g, "");
@@ -28,7 +30,7 @@ const texto = (to, body) =>
 
 const plantilla = (to, name, vars = []) =>
   post({ messaging_product: "whatsapp", to: numero(to), type: "template",
-    template: { name, language: { code: LANG },
+    template: { name, language: { code: lang(name) },
       components: vars.length ? [{ type: "body", parameters: params(vars) }] : [] } });
 
 // Sube un PDF (Buffer) a Meta y devuelve el media id
@@ -45,7 +47,7 @@ async function subirPdf(buffer, filename) {
 
 const plantillaPdf = (to, name, mediaId, filename, vars = []) =>
   post({ messaging_product: "whatsapp", to: numero(to), type: "template",
-    template: { name, language: { code: LANG }, components: [
+    template: { name, language: { code: lang(name) }, components: [
       { type: "header", parameters: [{ type: "document", document: { id: mediaId, filename } }] },
       ...(vars.length ? [{ type: "body", parameters: params(vars) }] : []),
     ] } });
