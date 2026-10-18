@@ -1,5 +1,5 @@
 // URL para Meta:  https://TU-PROYECTO.vercel.app/api/webhook
-// Responde "soy un bot" + botón al chat de atención cada vez que un cliente escribe (máx. 1 por minuto por número).
+// Responde "soy un bot" + botón al chat de atención cada vez que un cliente escribe (sin espera: 0 segundos).
 // Todo queda registrado: míralo en /api/diagnostico?key=TU_VERIFY_TOKEN
 const crypto = require("crypto");
 const { sql } = require("./_db");
@@ -67,7 +67,7 @@ module.exports = async (req, res) => {
   }
   await log("POST recibido de Meta");
 
-  const seg = Number(process.env.WA_AUTOREPLY_SEGUNDOS ?? 60);
+  const seg = Number(process.env.WA_AUTOREPLY_SEGUNDOS ?? 0);
   try {
     await sql`create table if not exists wa_autoreply(tel text primary key, ultimo timestamptz not null)`;
     await sql`create table if not exists wa_msgs(id text primary key, ts timestamptz not null default now())`;
