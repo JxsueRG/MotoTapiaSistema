@@ -46,8 +46,20 @@ const plantilla = (to, name, vars = []) =>
 // Mensaje interactivo con botón (solo dentro de las 24 h después de que el cliente escribió)
 const textoBoton = (to, body, boton, url) =>
   post({ messaging_product: "whatsapp", to: numero(to), type: "interactive", interactive: {
-    type: "cta_url", header: { type: "text", text: "🤖 Mensaje automático" }, body: { text: body },
-    footer: { text: "MOTO TAPIA SERVICE" }, action: { name: "cta_url", parameters: { display_text: boton, url } } } });
+    type: "cta_url", body: { text: body },
+    action: { name: "cta_url", parameters: { display_text: String(boton).slice(0, 20), url } } } });
+
+const CHAT_URL = "https://wa.me/524521986831";
+const AVISO = "🤖 *Mensaje automático*\n\nHola 👋 Soy el asistente automático (bot) de *MOTO TAPIA SERVICE*. " +
+  "Este número *no puede leer ni contestar mensajes*.\n\nPara hablar con una persona toca el botón de abajo o llama al *452 198 6831*.";
+
+// Botón "Hablar con atención"; si Meta lo rechaza, manda el mismo aviso en texto simple con el enlace
+async function avisoBot(to) {
+  const r = await textoBoton(to, AVISO, "Hablar con atención", CHAT_URL);
+  if (r.ok) return { ok: true, boton: true, data: r.data };
+  const f = await texto(to, AVISO.replace("toca el botón de abajo", "escríbenos aquí") + "\n" + CHAT_URL);
+  return { ok: f.ok, boton: false, data: f.data, errorBoton: r.data?.error?.message };
+}
 
 // Sube un PDF (Buffer) a Meta y devuelve el media id
 async function subirPdf(buffer, filename) {
@@ -67,4 +79,4 @@ const plantillaPdf = (to, name, mediaId, filename, vars = []) =>
     ...(vars.length ? [{ type: "body", parameters: params(vars) }] : []),
   ]);
 
-module.exports = { numero, texto, textoBoton, plantilla, subirPdf, plantillaPdf };
+module.exports = { numero, texto, textoBoton, avisoBot, plantilla, subirPdf, plantillaPdf };
