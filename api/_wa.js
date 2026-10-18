@@ -3,8 +3,20 @@ const BASE = `https://graph.facebook.com/${V}`;
 const TOKEN = () => process.env.WHATSAPP_TOKEN;
 const PHONE = () => process.env.PHONE_NUMBER_ID;
 // Idioma de cada plantilla tal como está en Meta ("es" = Spanish). cita_mecanico quedó en inglés.
-const LANGS = { cita_mecanico: "en" };
+const LANGS = { cita_mecanico: "en", recordatorio_servicio: "en", cotizacion_pdf: "en" };
 const lang = n => LANGS[n] || "es";
+// Si Meta dice que la plantilla no existe en ese idioma (#132001), se prueba con los demás.
+const IDIOMAS = ["es", "es_MX", "en", "en_US"];
+async function enviarPlantilla(to, name, components) {
+  const orden = [lang(name), ...IDIOMAS.filter(l => l !== lang(name))];
+  let out;
+  for (const code of orden) {
+    out = await post({ messaging_product: "whatsapp", to: numero(to), type: "template",
+      template: { name, language: { code }, ...(components.length ? { components } : {}) } });
+    if (out.ok || out.data?.error?.code !== 132001) return out;
+  }
+  return out;
+}
 
 function numero(t) {
   let n = String(t || "").replace(/\D/g, "");
@@ -29,9 +41,7 @@ const texto = (to, body) =>
   post({ messaging_product: "whatsapp", to: numero(to), type: "text", text: { body, preview_url: true } });
 
 const plantilla = (to, name, vars = []) =>
-  post({ messaging_product: "whatsapp", to: numero(to), type: "template",
-    template: { name, language: { code: lang(name) },
-      components: vars.length ? [{ type: "body", parameters: params(vars) }] : [] } });
+  enviarPlantilla(to, name, vars.length ? [{ type: "body", parameters: params(vars) }] : []);
 
 // Sube un PDF (Buffer) a Meta y devuelve el media id
 async function subirPdf(buffer, filename) {
@@ -46,10 +56,9 @@ async function subirPdf(buffer, filename) {
 }
 
 const plantillaPdf = (to, name, mediaId, filename, vars = []) =>
-  post({ messaging_product: "whatsapp", to: numero(to), type: "template",
-    template: { name, language: { code: lang(name) }, components: [
-      { type: "header", parameters: [{ type: "document", document: { id: mediaId, filename } }] },
-      ...(vars.length ? [{ type: "body", parameters: params(vars) }] : []),
-    ] } });
+  enviarPlantilla(to, name, [
+    { type: "header", parameters: [{ type: "document", document: { id: mediaId, filename } }] },
+    ...(vars.length ? [{ type: "body", parameters: params(vars) }] : []),
+  ]);
 
 module.exports = { numero, texto, plantilla, subirPdf, plantillaPdf };

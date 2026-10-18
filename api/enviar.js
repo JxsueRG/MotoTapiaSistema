@@ -30,6 +30,13 @@ module.exports = async (req, res) => {
       return out.ok ? res.json({ ok: true }) : fail(res, out);
     }
 
+    if (tipo === "lista") {
+      const tel = String(r.wa || r.tel || "").replace(/\D/g, "").slice(-10);
+      if (tel.length !== 10) return res.status(400).json({ error: "La orden no tiene un WhatsApp válido" });
+      const out = await wa.plantilla(tel, "moto_lista", [r.nombre, r.id, moto, money((r.total || 0) - (r.anticipo || 0))]);
+      return out.ok ? res.json({ ok: true }) : fail(res, out);
+    }
+
     if (tipo === "mecanico") {
       const m = (await sql`select nombre,tel from mecanicos where id=${parseInt(r.mecanico, 10) || 0}`)[0];
       if (!m) return res.status(400).json({ error: "La orden no tiene mecánico asignado" });
