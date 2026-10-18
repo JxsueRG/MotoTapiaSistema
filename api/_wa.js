@@ -43,6 +43,12 @@ const texto = (to, body) =>
 const plantilla = (to, name, vars = []) =>
   enviarPlantilla(to, name, vars.length ? [{ type: "body", parameters: params(vars) }] : []);
 
+// Mensaje interactivo con botón (solo dentro de las 24 h después de que el cliente escribió)
+const textoBoton = (to, body, boton, url) =>
+  post({ messaging_product: "whatsapp", to: numero(to), type: "interactive", interactive: {
+    type: "cta_url", header: { type: "text", text: "🤖 Mensaje automático" }, body: { text: body },
+    footer: { text: "MOTO TAPIA SERVICE" }, action: { name: "cta_url", parameters: { display_text: boton, url } } } });
+
 // Sube un PDF (Buffer) a Meta y devuelve el media id
 async function subirPdf(buffer, filename) {
   const fd = new FormData();
@@ -61,4 +67,4 @@ const plantillaPdf = (to, name, mediaId, filename, vars = []) =>
     ...(vars.length ? [{ type: "body", parameters: params(vars) }] : []),
   ]);
 
-module.exports = { numero, texto, plantilla, subirPdf, plantillaPdf };
+module.exports = { numero, texto, textoBoton, plantilla, subirPdf, plantillaPdf };
