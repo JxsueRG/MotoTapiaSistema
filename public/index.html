@@ -256,8 +256,8 @@ const calc=()=>{$("#restan").textContent=money((+$("#total").value||0)-(+$("#ant
 $("#total").oninput=$("#anticipo").oninput=calc;
 
 /* ---------- fotos ---------- */
-function shrink(file){return new Promise(res=>{const img=new Image(),u=URL.createObjectURL(file);img.onload=()=>{const m=1000,k=Math.min(1,m/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=img.width*k;c.height=img.height*k;c.getContext("2d").drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",.68))};img.onerror=()=>res(null);img.src=u})}
-async function addFiles(files){for(const f of files){const d=await shrink(f);if(d)photos.push(d)}drawThumbs()}
+function shrinkFile(file){return new Promise(res=>{const img=new Image(),u=URL.createObjectURL(file);img.onload=()=>{const m=1000,k=Math.min(1,m/Math.max(img.width,img.height)),c=document.createElement("canvas");c.width=img.width*k;c.height=img.height*k;c.getContext("2d").drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL("image/jpeg",.68))};img.onerror=()=>res(null);img.src=u})}
+async function addFiles(files){for(const f of files){try{const d=await shrinkFile(f);if(d)photos.push(d);else toast("No se pudo leer una foto")}catch(e){toast("Error con una foto")}}drawThumbs()}
 function drawThumbs(){$("#thumbs").innerHTML=photos.map((p,i)=>`<div><img src="${p}" alt="Foto ${i+1}"><button type="button" data-i="${i}" aria-label="Quitar foto">×</button></div>`).join("");
   document.querySelectorAll("#thumbs button").forEach(b=>b.onclick=()=>{photos.splice(+b.dataset.i,1);drawThumbs()})}
 $("#bCam").onclick=()=>$("#fCam").click();$("#bGal").onclick=()=>$("#fGal").click();
