@@ -408,7 +408,7 @@ async function shrink(src,max=760,q=.65){const i=await imgData(src),k=Math.min(1
   c.width=Math.round(i.naturalWidth*k);c.height=Math.round(i.naturalHeight*k);const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(i,0,0,c.width,c.height);
   return{url:c.toDataURL("image/jpeg",q),w:c.width,h:c.height}}
 async function buildOrderPdf(r,conFotos,fmax=760,fq=.65){
-  const {jsPDF}=window.jspdf,doc=new jsPDF({unit:"mm",format:"a4"});
+  const {jsPDF}=window.jspdf,doc=new jsPDF({unit:"mm",format:"a4",compress:true});
   const W=210,M=14,OR=[255,90,0],INK=[30,35,48],GR=[105,112,128],LN=[226,229,235];
   const cl=t=>String(t==null?"":t).replace(/[\u2013\u2014]/g,"-").replace(/[^\x09\x0A\x0D\x20-\x7E\u00A0-\u00FF]/g,"").trim();
   let y=38;
@@ -464,8 +464,13 @@ async function buildOrderPdf(r,conFotos,fmax=760,fq=.65){
     if(col)y+=rowH+4;y+=2}
   /* firma */
   ensure(46);head("Firma del cliente");
-  if(r.firma){try{const im=await imgData(r.firma),w=Math.min(70,im.naturalWidth/3),h=Math.min(30,w*im.naturalHeight/im.naturalWidth);
-    doc.setDrawColor(...LN);doc.setLineWidth(.3);doc.roundedRect(M,y,76,34,2,2,"S");doc.addImage(r.firma,"PNG",M+3,y+2,Math.min(70,h*im.naturalWidth/im.naturalHeight),Math.min(30,h));y+=38}catch(e){par("Firma registrada")}}
+  if(r.firma){try{
+    /* la firma se guarda a la resolución de la pantalla (PNG enorme): se reduce y se pasa a JPEG sobre fondo blanco */
+    const im=await imgData(r.firma),k=Math.min(1,500/im.naturalWidth),c=document.createElement("canvas");
+    c.width=Math.max(1,Math.round(im.naturalWidth*k));c.height=Math.max(1,Math.round(im.naturalHeight*k));
+    const g=c.getContext("2d");g.fillStyle="#fff";g.fillRect(0,0,c.width,c.height);g.drawImage(im,0,0,c.width,c.height);
+    const w=Math.min(70,im.naturalWidth/3),h=Math.min(30,w*im.naturalHeight/im.naturalWidth);
+    doc.setDrawColor(...LN);doc.setLineWidth(.3);doc.roundedRect(M,y,76,34,2,2,"S");doc.addImage(c.toDataURL("image/jpeg",.85),"JPEG",M+3,y+2,Math.min(70,h*im.naturalWidth/im.naturalHeight),Math.min(30,h));y+=38}catch(e){par("Firma registrada")}}
   else par("Sin firma");
   /* pie de página */
   const n=doc.getNumberOfPages();
