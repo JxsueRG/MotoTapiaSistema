@@ -35,7 +35,7 @@ async function post(payload) {
     method: "POST",
     headers: { Authorization: `Bearer ${TOKEN()}`, "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-    signal: AbortSignal.timeout(15000),
+    signal: AbortSignal.timeout(25000),
   });
   const data = await r.json().catch(() => ({}));
   return { ok: r.ok, data };
