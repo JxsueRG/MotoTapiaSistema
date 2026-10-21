@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
     if (!auth(req, res)) return;
     await init();
     const { tipo, id, pdf } = req.body || {};
-    const rows = await sql`select id,data from recepciones where id=${parseInt(id, 10) || 0}`;
+    const rows = await sql`select id, data - 'fotos' - 'firma' - 'inv' - 'est' - 'dmg' as data from recepciones where id=${parseInt(id, 10) || 0}`;
     if (!rows.length) return res.status(404).json({ error: "No existe la orden" });
     const r = { ...rows[0].data, id: rows[0].id };
     const moto = `${r.marca || ""} ${r.modelo || ""}`.trim();
@@ -46,6 +46,6 @@ module.exports = async (req, res) => {
     res.status(400).json({ error: "tipo inválido" });
   } catch (e) {
     console.error(e);
-    res.status(500).json({ error: "Error al enviar" });
+    res.status(500).json({ error: "Error al enviar: " + (e?.message || "desconocido") });
   }
 };

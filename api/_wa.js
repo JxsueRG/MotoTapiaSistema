@@ -7,13 +7,16 @@ const LANGS = { cita_mecanico: "en", recordatorio_servicio: "en", cotizacion_pdf
 const lang = n => LANGS[n] || "es";
 // Si Meta dice que la plantilla no existe en ese idioma (#132001), se prueba con los demás.
 const IDIOMAS = ["es", "es_MX", "en", "en_US"];
+const buenos = {}; // idioma que ya funcionó por plantilla (evita reintentos lentos)
 async function enviarPlantilla(to, name, components) {
-  const orden = [lang(name), ...IDIOMAS.filter(l => l !== lang(name))];
+  const primero = buenos[name] || lang(name);
+  const orden = [primero, ...IDIOMAS.filter(l => l !== primero)];
   let out;
   for (const code of orden) {
     out = await post({ messaging_product: "whatsapp", to: numero(to), type: "template",
       template: { name, language: { code }, ...(components.length ? { components } : {}) } });
-    if (out.ok || out.data?.error?.code !== 132001) return out;
+    if (out.ok) { buenos[name] = code; return out; }
+    if (out.data?.error?.code !== 132001) return out;
   }
   return out;
 }
@@ -32,6 +35,7 @@ async function post(payload) {
     method: "POST",
     headers: { Authorization: `Bearer ${TOKEN()}`, "Content-Type": "application/json" },
     body: JSON.stringify(payload),
+    signal: AbortSignal.timeout(15000),
   });
   const data = await r.json().catch(() => ({}));
   return { ok: r.ok, data };
