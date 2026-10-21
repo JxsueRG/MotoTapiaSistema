@@ -243,7 +243,7 @@ const editRec=(id,o)=>api("recepciones/"+id,{method:"PUT",body:JSON.stringify(o)
 /* ---------- utilidades ---------- */
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const money=n=>"$"+(Number(n)||0).toLocaleString("es-MX");
-function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");setTimeout(()=>e.classList.remove("on"),2400)}
+function toast(t){const e=$("#toast");e.textContent=t;e.classList.add("on");setTimeout(()=>e.classList.remove("on"),4000)}
 function nowLocal(){const d=new Date();d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)}
 const fmtDT=s=>s?new Date(s).toLocaleString("es-MX",{dateStyle:"medium",timeStyle:"short"}):"";
 const radio=n=>{const e=document.querySelector(`input[name="${n}"]:checked`);return e?e.value:""};
@@ -407,7 +407,7 @@ const imgData=src=>new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);
 async function shrink(src,max=760,q=.65){const i=await imgData(src),k=Math.min(1,max/Math.max(i.naturalWidth,i.naturalHeight)),c=document.createElement("canvas");
   c.width=Math.round(i.naturalWidth*k);c.height=Math.round(i.naturalHeight*k);const x=c.getContext("2d");x.fillStyle="#fff";x.fillRect(0,0,c.width,c.height);x.drawImage(i,0,0,c.width,c.height);
   return{url:c.toDataURL("image/jpeg",q),w:c.width,h:c.height}}
-async function buildOrderPdf(r,conFotos){
+async function buildOrderPdf(r,conFotos,fmax=760,fq=.65){
   const {jsPDF}=window.jspdf,doc=new jsPDF({unit:"mm",format:"a4"});
   const W=210,M=14,OR=[255,90,0],INK=[30,35,48],GR=[105,112,128],LN=[226,229,235];
   const cl=t=>String(t==null?"":t).replace(/[\u2013\u2014]/g,"-").replace(/[^\x09\x0A\x0D\x20-\x7E\u00A0-\u00FF]/g,"").trim();
@@ -457,7 +457,7 @@ async function buildOrderPdf(r,conFotos){
   /* fotos (reducidas para que el PDF pese poco) */
   if(conFotos&&r.fotos&&r.fotos.length){head("Fotos");
     const fs=r.fotos.slice(0,6),bw=(W-2*M-6)/2;let col=0,rowH=0;
-    for(const f of fs){try{const im=await shrink(f),h=Math.min(64,bw*im.h/im.w),w=h*im.w/im.h;
+    for(const f of fs){try{const im=await shrink(f,fmax,fq),h=Math.min(64,bw*im.h/im.w),w=h*im.w/im.h;
       if(col===0)ensure(h+4);
       doc.addImage(im.url,"JPEG",M+col*(bw+6),y,w>bw?bw:w,w>bw?bw*im.h/im.w:h);rowH=Math.max(rowH,h);
       col++;if(col===2){y+=rowH+4;col=0;rowH=0}}catch(e){}}
@@ -476,10 +476,10 @@ async function buildOrderPdf(r,conFotos){
 
 /* ---------- Envío por la API de WhatsApp (Meta) ---------- */
 async function sendWa(body,okMsg){
-  try{const r=await fetch("/api/enviar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+  try{const r=await fetch("/api/enviar",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),signal:AbortSignal.timeout(40000)});
     const d=await r.json().catch(()=>({}));
-    toast(r.ok?okMsg:(d.error||"No se pudo enviar"));return r.ok}
-  catch(e){toast("No se pudo enviar");return false}}
+    toast(r.ok?okMsg:(d.error||("No se pudo enviar (error "+r.status+")")));return r.ok}
+  catch(e){toast(e.name==="TimeoutError"?"Tardó demasiado, intenta de nuevo":"No se pudo enviar: sin conexión");return false}}
 $("#dWaApi").onclick=async()=>{
   if(!current)return;
   const tel=String(current.wa||current.tel||"").replace(/\D/g,"").slice(-10);
@@ -487,8 +487,13 @@ $("#dWaApi").onclick=async()=>{
   if(!confirm("¿Enviar la orden #"+current.id+" por WhatsApp al "+tel+"?"))return;
   const b=$("#dWaApi"),t0=b.textContent;b.disabled=true;b.textContent="Generando PDF...";
   try{
-    let pdf=await buildOrderPdf(current,true);
-    if(pdf.length>3.3e6)pdf=await buildOrderPdf(current,false);   // Vercel acepta ~4.5 MB por envío
+    // Vercel acepta ~4.5 MB por envío: primero se reducen las fotos, y solo si aun así no cabe se quitan
+    let pdf=null;
+    for(const [fmax,fq] of [[760,.65],[560,.55],[420,.45],[320,.4]]){
+      pdf=await buildOrderPdf(current,true,fmax,fq);
+      if(pdf.length<=3.3e6)break;
+    }
+    if(pdf.length>3.3e6){pdf=await buildOrderPdf(current,false);toast("El PDF salió muy pesado: se envió sin fotos")}
     b.textContent="Enviando...";
     await sendWa({tipo:"orden",id:current.id,pdf},"PDF enviado por WhatsApp ✅");
   }catch(e){toast("No se pudo generar el PDF")}
